@@ -1,0 +1,24 @@
+name: home_app
+description: Home Manager Application
+version: 0.0.1
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  rummel_blue_theme:
+    path: ../../../../resources/rummel_blue_theme
+  shared_services:
+    path: ../../../../resources/shared_services
+  home_ui:
+    path: ../../packages/home_ui
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

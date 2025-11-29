@@ -1,0 +1,23 @@
+name: home_ui
+description: Home management widgets and screens
+version: 0.0.1
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  rummel_blue_theme:
+    path: ../../../../resources/rummel_blue_theme
+  shared_services:
+    path: ../../../../resources/shared_services
+  http: ^1.1.0
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms: {}
