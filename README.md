@@ -281,6 +281,12 @@ MIT License - See LICENSE file for details
 - **Meal Planner**: Weekly meal planning application
   - Repository: https://github.com/srummel/meal-planner
 
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md) - System design
+- [Deployment](docs/DEPLOYMENT.md) - Deployment guide
+- [Changelog](./CHANGELOG.md) - Version history
+
 ---
 
-Made with ❤️ by Shawn Rummel
+[Platform Documentation](../../../docs/) | [Product Overview](../../../docs/products/home-manager.md)
