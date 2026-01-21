@@ -46,6 +46,61 @@ Authorization: Bearer <access_token>
 
 Backend validates tokens using AWS Cognito SDK and checks module access permissions.
 
+## Design System
+
+This module uses the shared Artemis Design System. See [Design System](../../../../docs/architecture/DESIGN_SYSTEM.md) for complete specifications.
+
+### Design Principles
+
+All UI components follow the shared design system to ensure visual consistency across the Artemis ecosystem:
+
+- **Colors**: Rummel Blue primary (`#1E88E5`), Teal secondary (`#26A69A`)
+- **Typography**: Material 3 type scale with system fonts
+- **Spacing**: Consistent 4dp base unit scale (xs: 4dp, sm: 8dp, md: 16dp, lg: 24dp)
+- **Components**: Shared button, card, input, and navigation styles
+
+### Module-Specific Colors
+
+| Element | Color | Token | Usage |
+|---------|-------|-------|-------|
+| Task Complete | `#388E3C` | `success` | Completed tasks, goals at 100% |
+| Task Overdue | `#D32F2F` | `error` | Overdue tasks, missed deadlines |
+| Task Upcoming | `#F57C00` | `warning` | Tasks due soon, goals near deadline |
+| High Priority | `#D32F2F` | `error` | High priority indicator |
+| Medium Priority | `#F57C00` | `warning` | Medium priority indicator |
+| Low Priority | `#388E3C` | `success` | Low priority indicator |
+
+### Category Icons and Colors
+
+| Category | Icon | Color |
+|----------|------|-------|
+| Cleaning | `cleaning_services` | `#26A69A` |
+| Chores | `checklist` | `#1E88E5` |
+| Cooking | `restaurant` | `#F57C00` |
+| Errands | `directions_car` | `#7B1FA2` |
+| Outdoor | `grass` | `#388E3C` |
+| Organizing | `inventory_2` | `#0288D1` |
+| Maintenance | `build` | `#455A64` |
+| Planning | `event` | `#1565C0` |
+
+### Key Components
+
+| Component | Specification |
+|-----------|---------------|
+| TaskCard | Card with checkbox, category icon, priority badge, time estimate |
+| GoalCard | Card with progress bar, category badge, target date |
+| DayColumn | Vertical list with day header, expandable task groups |
+| StatsCard | Summary card with completion rate, total time |
+| CategoryFilter | Chip group for filtering by category |
+| ProgressBar | Linear progress with percentage label |
+
+### Screen Layouts
+
+All screens follow responsive breakpoints from the shared design system:
+- Mobile (< 600dp): Single column with day tabs, bottom navigation
+- Tablet (600-839dp): 3-day view with swipe navigation
+- Desktop (>= 840dp): Full week view with 7 columns
+
 ## Data Models
 
 ### Task
@@ -211,6 +266,276 @@ Backend validates tokens using AWS Cognito SDK and checks module access permissi
     "active": 3,
     "average_progress": 41.7
   }
+}
+```
+
+### Tool
+
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| id | String | PK, unique | Unique identifier |
+| name | String | Required | Tool name |
+| description | String? | Optional | Detailed description |
+| category | String | Required, enum | Tool category |
+| owned | bool | Default: true | Whether tool is owned |
+| condition | String? | Default: good | Current condition |
+| storage_location | String? | Optional | Where tool is stored |
+| purchase_date | String? | Optional, ISO date | When purchased |
+| notes | String? | Optional | Additional notes |
+
+**Categories:**
+| Category | Description |
+|----------|-------------|
+| power_tool | Electric/battery powered tools |
+| hand_tool | Manual tools |
+| measuring | Measuring instruments |
+| safety | Safety equipment |
+| garden | Gardening tools |
+| cleaning | Cleaning equipment |
+
+**Condition Values:**
+| Condition | Description |
+|-----------|-------------|
+| excellent | Like new |
+| good | Normal wear |
+| fair | Significant wear |
+| poor | Barely functional |
+| needs_repair | Requires fixing |
+
+**JSON Serialization:**
+```json
+{
+  "id": "tool-1",
+  "name": "Cordless Drill",
+  "description": "18V cordless drill with battery and charger",
+  "category": "power_tool",
+  "owned": true,
+  "condition": "excellent",
+  "storage_location": "Garage - Tool Cabinet",
+  "purchase_date": "2023-06-15",
+  "notes": "DeWalt 20V MAX"
+}
+```
+
+### Material
+
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| id | String | PK, unique | Unique identifier |
+| name | String | Required | Material name |
+| description | String? | Optional | Detailed description |
+| quantity | float | Default: 1.0 | Amount needed/on hand |
+| unit | String | Default: each | Unit of measure |
+| unit_cost | float? | Optional | Cost per unit |
+| total_cost | float? | Optional | Total cost |
+| supplier | String? | Optional | Where to purchase |
+| purchased | bool | Default: false | Whether purchased |
+| notes | String? | Optional | Additional notes |
+
+**Unit Values:**
+| Unit | Description |
+|------|-------------|
+| each | Individual items |
+| ft | Linear feet |
+| in | Inches |
+| sq_ft | Square feet |
+| gallon | Gallons |
+| lb | Pounds |
+| oz | Ounces |
+| box | Box/package |
+| bag | Bag |
+
+**JSON Serialization:**
+```json
+{
+  "id": "mat-1",
+  "name": "2x4 Lumber (8ft)",
+  "description": "Kiln-dried whitewood studs",
+  "quantity": 10,
+  "unit": "each",
+  "unit_cost": 5.98,
+  "total_cost": 59.80,
+  "supplier": "Home Depot",
+  "purchased": true,
+  "notes": "For garage shelf project"
+}
+```
+
+### Resource
+
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| id | String | PK, unique | Unique identifier |
+| name | String | Required | Resource name |
+| type | String | Required, enum | Resource type |
+| url | String? | Optional | Link to resource |
+| description | String? | Optional | Detailed description |
+| notes | String? | Optional | Additional notes |
+
+**Resource Types:**
+| Type | Description |
+|------|-------------|
+| document | PDF, documents |
+| video | Video tutorials |
+| guide | How-to guides |
+| contact | Service providers |
+| reference | Reference materials |
+| manual | Product manuals |
+| permit | Building permits |
+
+**JSON Serialization:**
+```json
+{
+  "id": "res-1",
+  "name": "DIY Garage Shelving Guide",
+  "type": "guide",
+  "url": "https://example.com/garage-shelving",
+  "description": "Step-by-step guide for building garage storage shelves",
+  "notes": "Good reference for shelf project"
+}
+```
+
+### ProjectItem
+
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| item_id | String | Required | Reference to tool/material/resource |
+| item_type | String | Required, enum | Type of item |
+| quantity_needed | float? | Optional | Amount needed (for materials) |
+| notes | String? | Optional | Project-specific notes |
+
+**Item Types:** tool, material, resource
+
+**JSON Serialization:**
+```json
+{
+  "item_id": "tool-1",
+  "item_type": "tool",
+  "quantity_needed": null,
+  "notes": "For drilling pilot holes"
+}
+```
+
+### Project
+
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| id | String | PK, unique | Unique identifier |
+| title | String | Required | Project name |
+| description | String? | Optional | Detailed description |
+| status | String | Default: planned | Project status |
+| category | String | Required, enum | Project category |
+| priority | String? | Default: medium | Priority level |
+| start_date | String? | Optional, ISO date | When started |
+| target_date | String? | Optional, ISO date | Target completion |
+| completed_date | String? | Optional, ISO date | When completed |
+| budget | float? | Optional | Planned budget |
+| actual_cost | float? | Optional | Actual spending |
+| tools | List\<ProjectItem\> | Default: [] | Required tools |
+| materials | List\<ProjectItem\> | Default: [] | Required materials |
+| resources | List\<ProjectItem\> | Default: [] | Related resources |
+| tasks | List\<String\> | Default: [] | Related task IDs |
+| notes | String? | Optional | Additional notes |
+
+**Status Values:**
+| Status | Description |
+|--------|-------------|
+| planned | Not yet started |
+| in_progress | Currently active |
+| on_hold | Paused |
+| completed | Finished |
+| cancelled | Abandoned |
+
+**Project Categories:**
+| Category | Description |
+|----------|-------------|
+| maintenance | Regular upkeep |
+| renovation | Major updates |
+| repair | Fixing issues |
+| improvement | Enhancements |
+| outdoor | Yard/exterior |
+| organization | Storage/organizing |
+
+**Relationships:**
+- Project has many Tools (via ProjectItem)
+- Project has many Materials (via ProjectItem)
+- Project has many Resources (via ProjectItem)
+- Project has many Tasks (via task IDs)
+
+**JSON Serialization:**
+```json
+{
+  "id": "proj-1",
+  "title": "Garage Storage Shelves",
+  "description": "Build sturdy shelving units along garage walls",
+  "status": "in_progress",
+  "category": "improvement",
+  "priority": "high",
+  "start_date": "2026-01-15",
+  "target_date": "2026-02-15",
+  "budget": 300.00,
+  "actual_cost": 167.78,
+  "tools": [
+    {"item_id": "tool-1", "item_type": "tool", "notes": "For drilling pilot holes"}
+  ],
+  "materials": [
+    {"item_id": "mat-1", "item_type": "material", "quantity_needed": 10}
+  ],
+  "resources": [
+    {"item_id": "res-1", "item_type": "resource"}
+  ],
+  "tasks": [],
+  "notes": "Need to clear out garage first"
+}
+```
+
+### Asset
+
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| id | String | PK, unique | Unique identifier |
+| name | String | Required | Asset name |
+| description | String? | Optional | Detailed description |
+| category | String | Required, enum | Asset category |
+| location | String? | Optional | Where in home |
+| manufacturer | String? | Optional | Brand/manufacturer |
+| model_number | String? | Optional | Model identifier |
+| serial_number | String? | Optional | Serial number |
+| purchase_date | String? | Optional, ISO date | When purchased |
+| purchase_price | float? | Optional | Original cost |
+| warranty_expires | String? | Optional, ISO date | Warranty end date |
+| last_maintenance | String? | Optional, ISO date | Last service date |
+| next_maintenance | String? | Optional, ISO date | Next service due |
+| condition | String? | Default: good | Current condition |
+| notes | String? | Optional | Additional notes |
+
+**Asset Categories:**
+| Category | Description |
+|----------|-------------|
+| appliance | Major appliances |
+| hvac | Heating/cooling systems |
+| plumbing | Water heater, fixtures |
+| electrical | Panels, systems |
+| structural | Foundation, roof |
+| furniture | Major furniture |
+| outdoor | External equipment |
+| safety | Safety systems |
+
+**JSON Serialization:**
+```json
+{
+  "id": "asset-1",
+  "name": "Refrigerator",
+  "description": "French door refrigerator with ice maker",
+  "category": "appliance",
+  "location": "Kitchen",
+  "manufacturer": "Samsung",
+  "model_number": "RF28R7551SR",
+  "purchase_date": "2022-03-15",
+  "purchase_price": 2499.00,
+  "warranty_expires": "2027-03-15",
+  "condition": "excellent",
+  "notes": "Extended warranty purchased"
 }
 ```
 
@@ -710,6 +1035,237 @@ Backend validates tokens using AWS Cognito SDK and checks module access permissi
 }
 ```
 
+### GET /tools/{user_id}
+
+**Description:** Get all tools for user
+
+**Authentication:** None (planned: JWT Bearer)
+
+**Path Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| user_id | string | Yes | User identifier |
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "tools": [
+    {
+      "id": "tool-1",
+      "name": "Cordless Drill",
+      "category": "power_tool",
+      "owned": true,
+      "condition": "excellent"
+    }
+  ]
+}
+```
+
+### GET /tools/{user_id}/item/{tool_id}
+
+**Description:** Get a specific tool by ID
+
+**Path Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| user_id | string | Yes | User identifier |
+| tool_id | string | Yes | Tool identifier |
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "tool": { "id": "tool-1", "name": "Cordless Drill", ... }
+}
+```
+
+### GET /tools/{user_id}/category/{category}
+
+**Description:** Get tools filtered by category
+
+**Path Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| user_id | string | Yes | User identifier |
+| category | string | Yes | Tool category |
+
+### GET /tools/{user_id}/owned
+
+**Description:** Get tools filtered by ownership status
+
+**Query Parameters:**
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| owned | bool | true | Ownership filter |
+
+### GET /materials/{user_id}
+
+**Description:** Get all materials for user
+
+**Path Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| user_id | string | Yes | User identifier |
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "materials": [
+    {
+      "id": "mat-1",
+      "name": "2x4 Lumber (8ft)",
+      "quantity": 10,
+      "unit": "each",
+      "purchased": true
+    }
+  ]
+}
+```
+
+### GET /materials/{user_id}/item/{material_id}
+
+**Description:** Get a specific material by ID
+
+### GET /materials/{user_id}/purchased/{purchased}
+
+**Description:** Get materials filtered by purchase status
+
+**Path Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| purchased | bool | Yes | Purchase status filter |
+
+### GET /materials/{user_id}/supplier/{supplier}
+
+**Description:** Get materials filtered by supplier
+
+### GET /resources/{user_id}
+
+**Description:** Get all resources for user
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "resources": [
+    {
+      "id": "res-1",
+      "name": "DIY Garage Shelving Guide",
+      "type": "guide",
+      "url": "https://example.com/garage-shelving"
+    }
+  ]
+}
+```
+
+### GET /resources/{user_id}/item/{resource_id}
+
+**Description:** Get a specific resource by ID
+
+### GET /resources/{user_id}/type/{resource_type}
+
+**Description:** Get resources filtered by type
+
+### GET /projects/{user_id}
+
+**Description:** Get all projects for user
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "projects": [
+    {
+      "id": "proj-1",
+      "title": "Garage Storage Shelves",
+      "status": "in_progress",
+      "category": "improvement",
+      "budget": 300.00,
+      "tools": [...],
+      "materials": [...],
+      "resources": [...]
+    }
+  ]
+}
+```
+
+### GET /projects/{user_id}/item/{project_id}
+
+**Description:** Get a specific project by ID with resolved tools, materials, and resources
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "project": { ... },
+  "resolved_tools": [
+    { "id": "tool-1", "name": "Cordless Drill", "project_notes": "For drilling" }
+  ],
+  "resolved_materials": [
+    { "id": "mat-1", "name": "2x4 Lumber", "quantity_needed": 10 }
+  ],
+  "resolved_resources": [
+    { "id": "res-1", "name": "DIY Guide" }
+  ]
+}
+```
+
+### GET /projects/{user_id}/status/{status}
+
+**Description:** Get projects filtered by status (planned, in_progress, on_hold, completed, cancelled)
+
+### GET /projects/{user_id}/category/{category}
+
+**Description:** Get projects filtered by category
+
+### GET /assets/{user_id}
+
+**Description:** Get all home assets for user
+
+**Response 200:**
+```json
+{
+  "user_id": "user-123",
+  "assets": [
+    {
+      "id": "asset-1",
+      "name": "Refrigerator",
+      "category": "appliance",
+      "location": "Kitchen",
+      "manufacturer": "Samsung",
+      "warranty_expires": "2027-03-15"
+    }
+  ]
+}
+```
+
+### GET /assets/{user_id}/item/{asset_id}
+
+**Description:** Get a specific asset by ID
+
+### GET /assets/{user_id}/category/{category}
+
+**Description:** Get assets filtered by category
+
+### GET /assets/{user_id}/location/{location}
+
+**Description:** Get assets filtered by location (partial match)
+
+### GET /assets/{user_id}/maintenance-due
+
+**Description:** Get assets with upcoming or overdue maintenance
+
+### GET /assets/{user_id}/warranty-expiring
+
+**Description:** Get assets with warranties expiring soon
+
+**Query Parameters:**
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| days | int | 90 | Days to look ahead |
+
 ## Implementation Status
 
 ### Data Models
@@ -721,6 +1277,12 @@ Backend validates tokens using AWS Cognito SDK and checks module access permissi
 | WeeklyTasks | ✅ Implemented | Container model |
 | DailyTasks | ✅ Implemented | Container model |
 | Stats | ✅ Implemented | Computed response |
+| Tool | ✅ Implemented | Tool inventory model |
+| Material | ✅ Implemented | Project materials model |
+| Resource | ✅ Implemented | Reference resources model |
+| ProjectItem | ✅ Implemented | Junction model for project relationships |
+| Project | ✅ Implemented | Home project model with tools/materials/resources |
+| Asset | ✅ Implemented | Home inventory/asset model |
 
 ### API Endpoints
 
@@ -733,11 +1295,37 @@ Backend validates tokens using AWS Cognito SDK and checks module access permissi
 | GET /tasks/category/{user_id}/{cat} | ✅ Implemented | Filters by category |
 | GET /goals/{user_id} | ✅ Implemented | Returns 3 mock goals |
 | GET /stats/{user_id} | ✅ Implemented | Aggregated stats |
+| GET /tools/{user_id} | ✅ Implemented | Returns 8 mock tools |
+| GET /tools/{user_id}/item/{id} | ✅ Implemented | Get tool by ID |
+| GET /tools/{user_id}/category/{cat} | ✅ Implemented | Filter by category |
+| GET /tools/{user_id}/owned | ✅ Implemented | Filter by ownership |
+| GET /materials/{user_id} | ✅ Implemented | Returns 5 mock materials |
+| GET /materials/{user_id}/item/{id} | ✅ Implemented | Get material by ID |
+| GET /materials/{user_id}/purchased/{bool} | ✅ Implemented | Filter by purchase status |
+| GET /materials/{user_id}/supplier/{name} | ✅ Implemented | Filter by supplier |
+| GET /resources/{user_id} | ✅ Implemented | Returns 5 mock resources |
+| GET /resources/{user_id}/item/{id} | ✅ Implemented | Get resource by ID |
+| GET /resources/{user_id}/type/{type} | ✅ Implemented | Filter by type |
+| GET /projects/{user_id} | ✅ Implemented | Returns 3 mock projects |
+| GET /projects/{user_id}/item/{id} | ✅ Implemented | Get project with resolved items |
+| GET /projects/{user_id}/status/{status} | ✅ Implemented | Filter by status |
+| GET /projects/{user_id}/category/{cat} | ✅ Implemented | Filter by category |
+| GET /assets/{user_id} | ✅ Implemented | Returns 8 mock assets |
+| GET /assets/{user_id}/item/{id} | ✅ Implemented | Get asset by ID |
+| GET /assets/{user_id}/category/{cat} | ✅ Implemented | Filter by category |
+| GET /assets/{user_id}/location/{loc} | ✅ Implemented | Filter by location |
+| GET /assets/{user_id}/maintenance-due | ✅ Implemented | Assets needing maintenance |
+| GET /assets/{user_id}/warranty-expiring | ✅ Implemented | Expiring warranties |
 | POST /tasks | ⬜ Planned | Create task |
 | PATCH /tasks/{id} | ⬜ Planned | Update task |
 | DELETE /tasks/{id} | ⬜ Planned | Delete task |
 | POST /goals | ⬜ Planned | Create goal |
 | PATCH /goals/{id} | ⬜ Planned | Update goal |
+| POST /tools | ⬜ Planned | Create tool |
+| POST /materials | ⬜ Planned | Create material |
+| POST /resources | ⬜ Planned | Create resource |
+| POST /projects | ⬜ Planned | Create project |
+| POST /assets | ⬜ Planned | Create asset |
 
 ### UI Screens
 
