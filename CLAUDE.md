@@ -4,7 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Home Manager is a weekly home task management and goal tracking application with a FastAPI backend and Flutter web frontend. The backend is stateless (in-memory data only), and the frontend is a Material Design 3 Flutter web app hosted on GitHub Pages.
+Home Manager is a comprehensive home management application for tracking weekly tasks, goals, home projects, tools, materials, resources, and home assets. It features a FastAPI backend and Flutter web frontend. The backend is stateless (in-memory data only), and the frontend is a Material Design 3 Flutter web app hosted on GitHub Pages.
+
+**Key Features**:
+- Weekly task management with categories and priorities
+- Goal tracking with progress
+- Home project management with tools, materials, and resources
+- Tool inventory tracking
+- Material/supplies tracking for projects
+- Resource library (guides, videos, contacts, manuals)
+- Home asset inventory with warranty and maintenance tracking
 
 ## Common Development Commands
 
@@ -60,7 +69,7 @@ flutter test
 
 ### Backend Architecture (`backend/main.py`)
 
-- **Stateless API**: All data is generated in-memory via `_default_weekly_tasks()` and `_default_goals()` helper functions
+- **Stateless API**: All data is generated in-memory via helper functions (`_default_weekly_tasks()`, `_default_goals()`, `_default_tools()`, `_default_materials()`, `_default_resources()`, `_default_projects()`, `_default_assets()`)
 - **No persistence**: Data resets on every request - suitable only for development/demo
 - **User IDs**: Accepted as URL path parameters but currently ignored (all users get same mock data)
 - **CORS**: Open policy allowing all origins - must be restricted for production
@@ -68,7 +77,17 @@ flutter test
 **Data Models (Pydantic)**:
 - `Task`: id, title, description, day (Monday-Sunday), category, priority, completed, estimated_minutes
 - `Goal`: id, title, description, category, target_date, progress (0-100), is_active
-- Categories: cleaning, chores, cooking, errands, outdoor, organizing, maintenance, planning
+- `Tool`: id, name, description, category, owned, condition, storage_location, purchase_date, notes
+- `Material`: id, name, description, quantity, unit, unit_cost, total_cost, supplier, purchased, notes
+- `Resource`: id, name, type, url, description, notes
+- `ProjectItem`: item_id, item_type (tool/material/resource), quantity_needed, notes
+- `Project`: id, title, description, status, category, priority, dates, budget, actual_cost, tools[], materials[], resources[], tasks[], notes
+- `Asset`: id, name, description, category, location, manufacturer, model_number, serial_number, purchase_date, purchase_price, warranty_expires, maintenance dates, condition, notes
+
+**Task/Goal Categories**: cleaning, chores, cooking, errands, outdoor, organizing, maintenance, planning
+**Tool Categories**: power_tool, hand_tool, measuring, safety, garden, cleaning
+**Project Categories**: maintenance, renovation, repair, improvement, outdoor, organization
+**Asset Categories**: appliance, hvac, plumbing, electrical, structural, furniture, outdoor, safety
 
 **API Endpoints**:
 - `GET /health` - Health check
@@ -78,6 +97,27 @@ flutter test
 - `GET /tasks/category/{user_id}/{category}` - Tasks filtered by category
 - `GET /goals/{user_id}` - All goals (3 mock goals)
 - `GET /stats/{user_id}` - Aggregated statistics (completion rates, goal progress)
+- `GET /tools/{user_id}` - All tools (8 mock tools)
+- `GET /tools/{user_id}/item/{tool_id}` - Single tool by ID
+- `GET /tools/{user_id}/category/{category}` - Tools by category
+- `GET /tools/{user_id}/owned?owned=bool` - Tools by ownership
+- `GET /materials/{user_id}` - All materials (5 mock materials)
+- `GET /materials/{user_id}/item/{material_id}` - Single material by ID
+- `GET /materials/{user_id}/purchased/{bool}` - Materials by purchase status
+- `GET /materials/{user_id}/supplier/{supplier}` - Materials by supplier
+- `GET /resources/{user_id}` - All resources (5 mock resources)
+- `GET /resources/{user_id}/item/{resource_id}` - Single resource by ID
+- `GET /resources/{user_id}/type/{type}` - Resources by type
+- `GET /projects/{user_id}` - All projects (3 mock projects)
+- `GET /projects/{user_id}/item/{project_id}` - Project with resolved tools/materials/resources
+- `GET /projects/{user_id}/status/{status}` - Projects by status
+- `GET /projects/{user_id}/category/{category}` - Projects by category
+- `GET /assets/{user_id}` - All assets (8 mock assets)
+- `GET /assets/{user_id}/item/{asset_id}` - Single asset by ID
+- `GET /assets/{user_id}/category/{category}` - Assets by category
+- `GET /assets/{user_id}/location/{location}` - Assets by location (partial match)
+- `GET /assets/{user_id}/maintenance-due` - Assets needing maintenance
+- `GET /assets/{user_id}/warranty-expiring?days=90` - Assets with expiring warranties
 
 ### Frontend Architecture (Flutter Web)
 
