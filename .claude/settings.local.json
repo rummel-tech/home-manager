@@ -6,7 +6,8 @@
       "Bash(python -m json.tool:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(find /home/shawn/_Projects/modules/asset-managers/home-manager -not -path */.* -type d)"
     ]
   }
 }

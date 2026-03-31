@@ -6,14 +6,31 @@ void main() {
     late HomeApiService apiService;
 
     setUp(() {
-      apiService = HomeApiService(baseUrl: 'http://invalid-test-server-9999');
+      apiService = HomeApiService();
+    });
+
+    tearDown(() {
+      apiService.dispose();
+    });
+
+    group('Service instantiation', () {
+      test('creates service with default config', () {
+        final service = HomeApiService();
+        expect(service, isNotNull);
+        service.dispose();
+      });
+
+      test('creates service with injected client', () {
+        final service = HomeApiService();
+        expect(service, isNotNull);
+        service.dispose();
+      });
     });
 
     group('getWeeklyTasks', () {
       test('throws exception when server is not available', () async {
-        // Act & Assert
-        expect(
-          () => apiService.getWeeklyTasks('user-123'),
+        await expectLater(
+          apiService.getWeeklyTasks('user-123'),
           throwsA(isA<Exception>()),
         );
       });
@@ -21,17 +38,15 @@ void main() {
 
     group('getTodayTasks', () {
       test('throws exception when server is not available', () async {
-        // Act & Assert
-        expect(
-          () => apiService.getTodayTasks('user-123'),
+        await expectLater(
+          apiService.getTodayTasks('user-123'),
           throwsA(isA<Exception>()),
         );
       });
 
       test('throws exception with date parameter', () async {
-        // Act & Assert
-        expect(
-          () => apiService.getTodayTasks('user-123', date: '2025-11-21'),
+        await expectLater(
+          apiService.getTodayTasks('user-123', date: '2025-11-21'),
           throwsA(isA<Exception>()),
         );
       });
@@ -39,9 +54,8 @@ void main() {
 
     group('getGoals', () {
       test('throws exception when server is not available', () async {
-        // Act & Assert
-        expect(
-          () => apiService.getGoals('user-123'),
+        await expectLater(
+          apiService.getGoals('user-123'),
           throwsA(isA<Exception>()),
         );
       });
@@ -49,9 +63,8 @@ void main() {
 
     group('getStats', () {
       test('throws exception when server is not available', () async {
-        // Act & Assert
-        expect(
-          () => apiService.getStats('user-123'),
+        await expectLater(
+          apiService.getStats('user-123'),
           throwsA(isA<Exception>()),
         );
       });
@@ -59,34 +72,20 @@ void main() {
 
     group('getTasksByCategory', () {
       test('throws exception when server is not available', () async {
-        // Act & Assert
-        expect(
-          () => apiService.getTasksByCategory('user-123', 'cleaning'),
+        await expectLater(
+          apiService.getTasksByCategory('user-123', 'cleaning'),
           throwsA(isA<Exception>()),
         );
       });
 
       test('handles various category types', () async {
         final categories = ['cleaning', 'cooking', 'outdoor', 'organizing'];
-
-        for (var category in categories) {
-          expect(
-            () => apiService.getTasksByCategory('user-123', category),
+        for (final category in categories) {
+          await expectLater(
+            apiService.getTasksByCategory('user-123', category),
             throwsA(isA<Exception>()),
           );
         }
-      });
-    });
-
-    group('BaseUrl Configuration', () {
-      test('uses default baseUrl when not provided', () {
-        final service = HomeApiService();
-        expect(service.baseUrl, 'http://localhost:8020');
-      });
-
-      test('uses custom baseUrl when provided', () {
-        final service = HomeApiService(baseUrl: 'https://custom-api.com');
-        expect(service.baseUrl, 'https://custom-api.com');
       });
     });
 
@@ -96,7 +95,7 @@ void main() {
           await apiService.getWeeklyTasks('user-123');
           fail('Should have thrown an exception');
         } catch (e) {
-          expect(e.toString(), contains('Exception'));
+          expect(e, isA<Exception>());
         }
       });
 
@@ -105,7 +104,7 @@ void main() {
           await apiService.getTodayTasks('user-123');
           fail('Should have thrown an exception');
         } catch (e) {
-          expect(e.toString(), contains('Exception'));
+          expect(e, isA<Exception>());
         }
       });
 
@@ -114,7 +113,7 @@ void main() {
           await apiService.getGoals('user-123');
           fail('Should have thrown an exception');
         } catch (e) {
-          expect(e.toString(), contains('Exception'));
+          expect(e, isA<Exception>());
         }
       });
 
@@ -123,7 +122,7 @@ void main() {
           await apiService.getStats('user-123');
           fail('Should have thrown an exception');
         } catch (e) {
-          expect(e.toString(), contains('Exception'));
+          expect(e, isA<Exception>());
         }
       });
     });

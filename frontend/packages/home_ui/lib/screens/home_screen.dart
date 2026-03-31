@@ -256,7 +256,7 @@ class _HomeManagerScreenState extends State<HomeManagerScreen> {
 
     return Card(
       elevation: 2,
-      color: Theme.of(context).primaryColor.withOpacity(0.05),
+      color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
