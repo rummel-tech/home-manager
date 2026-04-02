@@ -8,9 +8,9 @@ dependencies:
   flutter:
     sdk: flutter
   rummel_blue_theme:
-    path: ../../../../resources/rummel_blue_theme
+    path: ../../../../../../resources/rummel_blue_theme
   shared_services:
-    path: ../../../../resources/shared_services
+    path: ../../../../../../resources/shared_services
   home_ui:
     path: ../../packages/home_ui
 
