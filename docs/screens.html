@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Manager — Screens</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f0f0; color: #1a1a1a; padding: 32px 24px; }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .subtitle { font-size: 13px; color: #666; margin-bottom: 36px; }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #999; margin: 48px 0 16px; padding-bottom: 6px; border-bottom: 1px solid #ddd; }
+    .screens { display: flex; flex-wrap: wrap; gap: 32px; }
+    .phone { width: 320px; flex-shrink: 0; }
+    .phone-label { font-size: 11px; font-weight: 600; color: #666; text-align: center; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em; }
+    .phone-shell { background: #fff; border-radius: 28px; border: 2.5px solid #333; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.12); position: relative; }
+    .status-bar { background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 4px; font-size: 11px; font-weight: 600; color: #333; border-bottom: 1px solid #f0f0f0; }
+    .app-bar { background: #fff; padding: 14px 16px 10px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #ececec; }
+    .app-bar .title { font-size: 18px; font-weight: 700; flex: 1; }
+    .app-bar .actions { display: flex; gap: 6px; }
+    .app-bar .actions span { font-size: 20px; color: #555; }
+    .screen-body { min-height: 500px; padding: 14px; background: #fafafa; overflow: hidden; }
+    .card { background: #fff; border-radius: 12px; border: 1px solid #e8e8e8; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .text-xs { font-size: 10px; } .text-sm { font-size: 12px; } .text-md { font-size: 14px; } .text-lg { font-size: 16px; font-weight: 700; }
+    .muted { color: #888; } .primary { color: #1976D2; }
+    .row { display: flex; align-items: center; gap: 8px; } .row-sb { display: flex; align-items: center; justify-content: space-between; } .col { display: flex; flex-direction: column; gap: 4px; } .flex-1 { flex: 1; }
+    .chip { font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; }
+    .chip-blue { background: #E3F2FD; color: #1976D2; } .chip-green { background: #E8F5E9; color: #2E7D32; } .chip-amber { background: #FFF8E1; color: #E65100; } .chip-grey { background: #F5F5F5; color: #555; }
+    .btn-filled { width: 100%; background: #1976D2; color: #fff; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; text-align: center; margin-top: 8px; }
+    .btn-outline { background: #fff; color: #1976D2; border: 1.5px solid #1976D2; border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600; display: inline-block; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
+    .field-input { width: 100%; border: 1.5px solid #ccc; border-radius: 8px; padding: 8px 10px; font-size: 13px; color: #222; background: #fff; }
+    .stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .stat-box { flex: 1; background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; padding: 10px 8px; text-align: center; }
+    .stat-val { font-size: 18px; font-weight: 700; color: #1976D2; }
+    .stat-lbl { font-size: 10px; color: #888; margin-top: 2px; }
+    .task-tile { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .task-tile:last-child { border-bottom: none; }
+    .checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid #aaa; flex-shrink: 0; margin-top: 1px; }
+    .checkbox.done { background: #1976D2; border-color: #1976D2; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; }
+    .goal-tile { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .goal-tile:last-child { border-bottom: none; }
+    .progress-bar-bg { background: #E3F2FD; border-radius: 4px; height: 6px; margin-top: 6px; }
+    .progress-bar-fill { background: #1976D2; border-radius: 4px; height: 6px; }
+    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .day-section { margin-bottom: 12px; }
+    .day-header { font-size: 12px; font-weight: 700; color: #1976D2; padding: 6px 0; border-bottom: 1px solid #e8e8e8; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>🏡 Home Manager</h1>
+  <p class="subtitle">Stay on top of household tasks, maintenance schedules, and home goals.</p>
+
+  <!-- ── Auth ── -->
+  <div class="section-label">Auth</div>
+  <div class="screens">
+
+    <div class="phone">
+      <div class="phone-label">Login</div>
+      <div class="phone-shell">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 32px 20px;">
+          <div style="font-size:64px; margin-bottom:12px; color:#1976D2;">🏡</div>
+          <div style="font-size:22px; font-weight:800; margin-bottom:4px;">Home Manager</div>
+          <div class="text-sm muted" style="margin-bottom:28px;">Sign in to manage your home</div>
+          <div class="field" style="width:100%;">
+            <label>Email</label>
+            <div class="row" style="border: 1.5px solid #ccc; border-radius:8px; padding: 8px 10px; background:#fff;">
+              <span>✉️</span><span class="text-sm" style="color:#aaa;">you@example.com</span>
+            </div>
+          </div>
+          <div class="field" style="width:100%;">
+            <label>Password</label>
+            <div class="row" style="border: 1.5px solid #1976D2; border-radius:8px; padding: 8px 10px; background:#fff;">
+              <span>🔒</span><span class="flex-1 text-sm">••••••••</span><span class="text-xs muted">👁</span>
+            </div>
+          </div>
+          <div class="btn-filled" style="width:100%;">Sign In</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Main Screens ── -->
+  <div class="section-label">Main Screens</div>
+  <div class="screens">
+
+    <!-- Home Dashboard -->
+    <div class="phone">
+      <div class="phone-label">Home Dashboard</div>
+      <div class="phone-shell">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="app-bar">
+          <div class="title">Home Manager</div>
+          <div class="actions"><span>🔄</span><span>⎋</span></div>
+        </div>
+        <div class="screen-body">
+          <div class="card" style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <span style="font-size:28px;">🏡</span>
+            <div class="col">
+              <div class="text-sm" style="font-weight:600;">Home Manager</div>
+              <div class="text-xs muted">Household tasks &amp; maintenance</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="text-md" style="font-weight:700; margin-bottom:10px;">Weekly Overview</div>
+            <div class="stat-row" style="margin-bottom:0;">
+              <div class="stat-box"><div class="stat-val">8/12</div><div class="stat-lbl">Tasks</div></div>
+              <div class="stat-box"><div class="stat-val">67%</div><div class="stat-lbl">Complete</div></div>
+              <div class="stat-box"><div class="stat-val">3</div><div class="stat-lbl">Active Goals</div></div>
+            </div>
+          </div>
+
+          <div class="section-row">
+            <span class="section-title">Today's Tasks — Thursday</span>
+          </div>
+          <div class="card" style="padding:8px 14px;">
+            <div class="task-tile">
+              <div class="checkbox done">✓</div>
+              <div class="col flex-1">
+                <div class="text-sm" style="font-weight:600; text-decoration:line-through; color:#aaa;">Vacuum living room</div>
+                <div class="text-xs muted">Cleaning · Morning</div>
+              </div>
+            </div>
+            <div class="task-tile">
+              <div class="checkbox"></div>
+              <div class="col flex-1">
+                <div class="text-sm" style="font-weight:600;">Change HVAC filter</div>
+                <div class="text-xs muted">Maintenance · Due today</div>
+              </div>
+              <span class="chip chip-amber">Due</span>
+            </div>
+            <div class="task-tile">
+              <div class="checkbox"></div>
+              <div class="col flex-1">
+                <div class="text-sm" style="font-weight:600;">Water plants</div>
+                <div class="text-xs muted">Garden · Afternoon</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-row" style="margin-top:4px;">
+            <span class="section-title">Goals</span>
+            <span class="btn-outline">+ Add Goal</span>
+          </div>
+          <div class="card" style="padding:8px 14px;">
+            <div class="goal-tile">
+              <div class="row-sb">
+                <span class="text-sm" style="font-weight:600;">Deep clean garage</span>
+                <span class="text-xs muted">60%</span>
+              </div>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:60%;"></div></div>
+            </div>
+            <div class="goal-tile">
+              <div class="row-sb">
+                <span class="text-sm" style="font-weight:600;">Repaint front door</span>
+                <span class="text-xs muted">20%</span>
+              </div>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:20%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly Tasks -->
+    <div class="phone">
+      <div class="phone-label">Weekly Tasks</div>
+      <div class="phone-shell">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="app-bar">
+          <span style="font-size:20px; color:#555;">←</span>
+          <div class="title">Weekly Tasks</div>
+        </div>
+        <div class="screen-body">
+          <div class="day-section">
+            <div class="day-header">Monday · 2 tasks</div>
+            <div class="task-tile">
+              <div class="checkbox done">✓</div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600; color:#aaa; text-decoration:line-through;">Take out recycling</div></div>
+            </div>
+            <div class="task-tile">
+              <div class="checkbox done">✓</div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600; color:#aaa; text-decoration:line-through;">Wipe down kitchen</div></div>
+            </div>
+          </div>
+          <div class="day-section">
+            <div class="day-header">Tuesday · 1 task</div>
+            <div class="task-tile">
+              <div class="checkbox done">✓</div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600; color:#aaa; text-decoration:line-through;">Laundry</div></div>
+            </div>
+          </div>
+          <div class="day-section">
+            <div class="day-header">Wednesday · 0 tasks</div>
+            <div class="text-xs muted" style="padding: 6px 0;">No tasks for this day</div>
+          </div>
+          <div class="day-section">
+            <div class="day-header" style="color:#E65100;">Thursday · 3 tasks (today)</div>
+            <div class="task-tile">
+              <div class="checkbox done">✓</div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600; color:#aaa; text-decoration:line-through;">Vacuum living room</div></div>
+            </div>
+            <div class="task-tile">
+              <div class="checkbox"></div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600;">Change HVAC filter</div></div>
+              <span class="chip chip-amber">Due</span>
+            </div>
+            <div class="task-tile">
+              <div class="checkbox"></div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600;">Water plants</div></div>
+            </div>
+          </div>
+          <div class="day-section">
+            <div class="day-header">Friday · 2 tasks</div>
+            <div class="task-tile">
+              <div class="checkbox"></div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600;">Mow lawn</div></div>
+            </div>
+            <div class="task-tile">
+              <div class="checkbox"></div>
+              <div class="col flex-1"><div class="text-sm" style="font-weight:600;">Clean bathrooms</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
